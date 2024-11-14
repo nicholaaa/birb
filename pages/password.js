@@ -25,7 +25,7 @@ const Password = () => {
     })
 
     const HandleSubmit = () => {
-        if (entry === process.env.PASSWORD) {
+        if (entry === process.env.NEXT_PUBLIC_PASSWORD) {
             sessionStorage.setItem("auth", "true");
             router.push("/add");
         } else {

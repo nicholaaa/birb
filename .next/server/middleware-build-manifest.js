@@ -1,1 +1,39 @@
-self.__BUILD_MANIFEST={polyfillFiles:["static/chunks/polyfills-42372ed130431b0a.js"],devFiles:[],ampDevFiles:[],lowPriorityFiles:[],rootMainFiles:[],pages:{"/":["static/chunks/webpack-a7ab9a8df2d0fa36.js","static/chunks/framework-64ad27b21261a9ce.js","static/chunks/main-e618b1edbb350739.js","static/chunks/758-c4148328f0dbc6a2.js","static/chunks/pages/index-fef321aeffa462c8.js"],"/404":["static/chunks/webpack-a7ab9a8df2d0fa36.js","static/chunks/framework-64ad27b21261a9ce.js","static/chunks/main-e618b1edbb350739.js","static/chunks/pages/404-723e8dcac96e934d.js"],"/_app":["static/chunks/webpack-a7ab9a8df2d0fa36.js","static/chunks/framework-64ad27b21261a9ce.js","static/chunks/main-e618b1edbb350739.js","static/chunks/pages/_app-e27d31be6116a1b6.js"],"/_error":["static/chunks/webpack-a7ab9a8df2d0fa36.js","static/chunks/framework-64ad27b21261a9ce.js","static/chunks/main-e618b1edbb350739.js","static/chunks/pages/_error-77823ddac6993d35.js"],"/add":["static/chunks/webpack-a7ab9a8df2d0fa36.js","static/chunks/framework-64ad27b21261a9ce.js","static/chunks/main-e618b1edbb350739.js","static/chunks/758-c4148328f0dbc6a2.js","static/chunks/695-46f35cd4acf32106.js","static/chunks/pages/add-250e43c9032ce17d.js"],"/browse":["static/chunks/webpack-a7ab9a8df2d0fa36.js","static/chunks/framework-64ad27b21261a9ce.js","static/chunks/main-e618b1edbb350739.js","static/chunks/758-c4148328f0dbc6a2.js","static/chunks/695-46f35cd4acf32106.js","static/chunks/pages/browse-59d6eed7da981b23.js"],"/password":["static/chunks/webpack-a7ab9a8df2d0fa36.js","static/chunks/framework-64ad27b21261a9ce.js","static/chunks/main-e618b1edbb350739.js","static/chunks/758-c4148328f0dbc6a2.js","static/chunks/pages/password-3a335bb6894e4597.js"]},ampFirstPages:[]},self.__BUILD_MANIFEST.lowPriorityFiles=["/static/"+process.env.__NEXT_BUILD_ID+"/_buildManifest.js",,"/static/"+process.env.__NEXT_BUILD_ID+"/_ssgManifest.js"];
+self.__BUILD_MANIFEST = {
+  "polyfillFiles": [
+    "static/chunks/polyfills.js"
+  ],
+  "devFiles": [
+    "static/chunks/react-refresh.js"
+  ],
+  "ampDevFiles": [],
+  "lowPriorityFiles": [],
+  "rootMainFiles": [],
+  "pages": {
+    "/_app": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_app.js"
+    ],
+    "/_error": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/_error.js"
+    ],
+    "/browse": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/browse.js"
+    ],
+    "/password": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/password.js"
+    ]
+  },
+  "ampFirstPages": []
+};
+self.__BUILD_MANIFEST.lowPriorityFiles = [
+"/static/" + process.env.__NEXT_BUILD_ID + "/_buildManifest.js",
+,"/static/" + process.env.__NEXT_BUILD_ID + "/_ssgManifest.js",
+
+];
