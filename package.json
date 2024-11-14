@@ -1,0 +1,29 @@
+{
+  "name": "birb",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0",
+    "build": "next build"
+  },
+  "keywords": [],
+  "author": "Nicholas",
+  "license": "ISC",
+  "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "@vercel/analytics": "^1.1.1",
+    "dotenv": "^16.4.5",
+    "framer-motion": "^10.16.4",
+    "install": "^0.13.0",
+    "next": "^14.2.7",
+    "next-themes": "^0.3.0",
+    "npm": "^10.8.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0"
+  }
+}
