@@ -27,7 +27,7 @@ const Login = () => {
         const checkSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session?.user) {
-                router.push("/add");
+                router.push("/browse");
             }
         };
         checkSession();
@@ -54,7 +54,7 @@ const Login = () => {
                 duration: 1000,
                 isClosable: true,
             });
-            router.push("/add");
+            router.push("/browse");
         }
     };
 

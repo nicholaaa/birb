@@ -3,34 +3,64 @@ import {
     Heading,
     SimpleGrid,
     Button,
+    IconButton,
     Input,
     InputGroup,
     InputLeftElement,
     InputRightAddon,
+    useToast,
+    HStack,
+    AlertDialog,
+    AlertDialogOverlay,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogBody,
+    AlertDialogFooter,
 } from "@chakra-ui/react";
 import Layout from "../components/layouts/article";
 import Section from "../components/section";
 import thumbnail from "../public/images/blank-thumbnail.jpg";
-import { Search2Icon } from "@chakra-ui/icons";
+import { Search2Icon, EditIcon, DeleteIcon } from "@chakra-ui/icons";
 import { GridItem } from "../components/grid-item";
 import { supabase } from "../supabaseClient";
-import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState, useRef } from "react";
 
 const Browse = () => {
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedAnimalId, setSelectedAnimalId] = useState(null);
+    const cancelRef = useRef();
+
+    const router = useRouter();
+    const toast = useToast();
     const [animals, setAnimals] = useState([]);
     const [search, setSearch] = useState("");
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const getSession = async () => {
+            const {
+                data: { session },
+            } = await supabase.auth.getSession();
+            setUser(session?.user || null);
+        };
+        getSession();
+    }, []);
 
     useEffect(() => {
         fetchAnimals();
     }, []);
 
     const onSearchChange = (e) => {
-        const value = e.target.value
+        const value = e.target.value;
         setSearch(value);
         searchAnimals(value);
     };
     const searchAnimals = async (searchValue) => {
-        const { data, error } = await supabase.from("animals").select().like("name", `%${searchValue}%`);
+        const { data, error } = await supabase
+            .from("animals")
+            .select()
+            .like("name", `%${searchValue}%`);
         if (error) {
             toast({
                 title: "Error fetching data",
@@ -40,7 +70,7 @@ const Browse = () => {
                 isClosable: true,
             });
         } else if (search == "") {
-            fetchAnimals()
+            fetchAnimals();
         } else {
             setAnimals(data);
         }
@@ -68,6 +98,42 @@ const Browse = () => {
         } else {
             setAnimals(data);
         }
+    };
+
+    const onEdit = (animalId) => {
+        router.push(`/edit/${animalId}`);
+    };
+
+    const openDeleteDialog = (animalId) => {
+        setSelectedAnimalId(animalId);
+        setIsDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!selectedAnimalId) return;
+
+        const { error } = await supabase
+            .from("animals")
+            .delete()
+            .eq("id", selectedAnimalId);
+        if (error) {
+            toast({
+                title: "Delete Failed",
+                description: error.message,
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+        } else {
+            toast({
+                title: "Deleted",
+                status: "success",
+                duration: 1000,
+                isClosable: true,
+            });
+            fetchAnimals(); // Refresh
+        }
+        setIsDialogOpen(false);
     };
 
     return (
@@ -107,16 +173,74 @@ const Browse = () => {
                         <Section>
                             <GridItem
                                 key={animal.name}
-                                thumbnail={animal.image_url ? animal.image_url : thumbnail}
+                                thumbnail={
+                                    animal.image_url
+                                        ? animal.image_url
+                                        : thumbnail
+                                }
                                 name={animal.name}
                                 species={animal.species}
                                 family={animal.family}
                                 nativity={animal.nativity}
                                 type={animal.type}
                             />
+                            {user && (
+                                <HStack mt={2} justify="center">
+                                    <IconButton
+                                        icon={<EditIcon />}
+                                        size="sm"
+                                        colorScheme="blue"
+                                        aria-label="Edit"
+                                        onClick={() => onEdit(animal.id)}
+                                    />
+                                    <IconButton
+                                        icon={<DeleteIcon />}
+                                        size="sm"
+                                        colorScheme="red"
+                                        aria-label="Delete"
+                                        onClick={() =>
+                                            openDeleteDialog(animal.id)
+                                        }
+                                    />
+                                </HStack>
+                            )}
                         </Section>
                     ))}
                 </SimpleGrid>
+                <AlertDialog
+                    isOpen={isDialogOpen}
+                    leastDestructiveRef={cancelRef}
+                    onClose={() => setIsDialogOpen(false)}
+                >
+                    <AlertDialogOverlay>
+                        <AlertDialogContent>
+                            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                                Confirm Delete
+                            </AlertDialogHeader>
+
+                            <AlertDialogBody>
+                                Are you sure you want to delete this discovery?
+                                This action cannot be undone.
+                            </AlertDialogBody>
+
+                            <AlertDialogFooter>
+                                <Button
+                                    ref={cancelRef}
+                                    onClick={() => setIsDialogOpen(false)}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    colorScheme="red"
+                                    onClick={confirmDelete}
+                                    ml={3}
+                                >
+                                    Delete
+                                </Button>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialogOverlay>
+                </AlertDialog>
             </Container>
         </Layout>
     );

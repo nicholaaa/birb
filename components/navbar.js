@@ -72,7 +72,7 @@ const Navbar = (props) => {
     const onLogout = () => {
         supabase.auth.signOut();
         setAuth(false);
-        router.push("/browse");
+        router.push("/");
     };
 
     return (
@@ -111,7 +111,7 @@ const Navbar = (props) => {
                         Browse
                     </LinkItem>
                     <LinkItem href={auth ? "/add" : "/login"} path={path}>
-                        Add Discovery
+                        {auth ? "Add Discovery" : "Login"}
                     </LinkItem>
                 </Stack>
 
@@ -138,7 +138,7 @@ const Navbar = (props) => {
                                     as={MenuLink}
                                     href={auth ? "/add" : "/password"}
                                 >
-                                    Add Discovery
+                                    {auth ? "Add Discovery" : "Login"}
                                 </MenuItem>
                             </MenuList>
                         </Menu>
