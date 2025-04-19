@@ -6,8 +6,9 @@ import {
     Input,
     Button,
     Divider,
-    useToast,
+    useToast
 } from "@chakra-ui/react";
+import { PasswordInput } from "../components/ui/password-input"
 import Layout from "../components/layouts/article";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -56,7 +57,7 @@ const Login = () => {
             router.push("/add");
         }
     };
-    
+
     return (
         <>
             <Layout title="Password">
@@ -69,17 +70,16 @@ const Login = () => {
                     <FormControl isRequired="true">
                         <FormLabel>Enter Email</FormLabel>
                         <Input
-                            type="string"
+                            type="email"
                             placeholder="Email"
                             autoComplete="off"
                             value={email}
                             onChange={handleEmailChange}
                         />
                         <FormLabel>Enter Password</FormLabel>
-                        <Input
-                            type="string"
+                        <PasswordInput
                             placeholder="Password"
-                            autoComplete="off"
+                            autoComplete="current-password"
                             value={password}
                             onChange={handlePasswordChange}
                         />

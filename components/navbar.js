@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import ThemeToggleButton from "./theme-toggle-button";
+import { useRouter } from "next/router";
 import { supabase } from "../supabaseClient";
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
@@ -44,6 +45,7 @@ const MenuLink = forwardRef((props, ref) => (
 ));
 
 const Navbar = (props) => {
+    const router = useRouter();
     const { path } = props;
     const [auth, setAuth] = useState(false);
 
@@ -56,8 +58,6 @@ const Navbar = (props) => {
         };
 
         getSession();
-
-        // Listen to login/logout events too
         const { data: listener } = supabase.auth.onAuthStateChange(
             (_event, session) => {
                 setAuth(!!session?.user);
@@ -68,6 +68,12 @@ const Navbar = (props) => {
             listener?.subscription.unsubscribe();
         };
     }, []);
+
+    const onLogout = () => {
+        supabase.auth.signOut();
+        setAuth(false);
+        router.push("/browse");
+    };
 
     return (
         <Box
@@ -112,11 +118,7 @@ const Navbar = (props) => {
                 <Box flex={1} align="right">
                     <ThemeToggleButton />
                     {auth && (
-                        <Button
-                            size="sm"
-                            ml={4}
-                            onClick={() => supabase.auth.signOut()}
-                        >
+                        <Button size="sm" ml={4} onClick={onLogout}>
                             Log out
                         </Button>
                     )}

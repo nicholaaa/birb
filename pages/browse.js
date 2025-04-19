@@ -32,7 +32,13 @@ const Browse = () => {
     const searchAnimals = async (searchValue) => {
         const { data, error } = await supabase.from("animals").select().like("name", `%${searchValue}%`);
         if (error) {
-            console.error("Error fetching data:", error);
+            toast({
+                title: "Error fetching data",
+                description: error,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
         } else if (search == "") {
             fetchAnimals()
         } else {
@@ -52,7 +58,13 @@ const Browse = () => {
         const { data, error } = await supabase.from("animals").select("*");
 
         if (error) {
-            console.error("Error fetching data:", error);
+            toast({
+                title: "Error fetching data",
+                description: error,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
         } else {
             setAnimals(data);
         }

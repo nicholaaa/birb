@@ -79,12 +79,6 @@ const Add = () => {
                 image_url: url,
             },
         ]);
-
-        if (error) {
-            console.log("Error: ", error);
-        } else {
-            console.log(data);
-        }
     };
 
     const handleSubmit = async () => {
@@ -115,39 +109,32 @@ const Add = () => {
         }
     };
 
-    // async function uploadImage(file) {
-    //     const fileName = `${Date.now()}_${file.name}`;
-    //     const { data, error } = await supabase.storage
-    //         .from("images")
-    //         .upload(fileName, file);
-
-    //     if (error) {
-    //         console.error("Error uploading image:", error);
-    //         return null;
-    //     }
-    //     console.log(data)
-    //     return data.path;
-    // }
-
     async function uploadImage(file) {
         const fileName = `${Date.now()}_${file.name}`;
-        console.log("Uploading file:", fileName);
-    
         try {
-            // Attempt to upload the image
             const { data, error } = await supabase.storage
                 .from("images")
                 .upload(fileName, file);
     
             if (error) {
-                console.error("Error uploading image:", error.message);
+                toast({
+                    title: "Error uploading image",
+                    description: error.message,
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
                 return null;
             }
-    
-            console.log("File uploaded successfully:", data);
-            return data.path; // Return the file path
+            return data.path;
         } catch (err) {
-            console.error("Unexpected error during file upload:", err.message);
+            toast({
+                title: "Unexpected error during file upload",
+                description: err.message,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+            });
             return null;
         }
     }
@@ -155,20 +142,15 @@ const Add = () => {
 
     async function getPublicUrl(filepath) {
         const { data, error } = supabase.storage.from("images").getPublicUrl(filepath);
-    
         if (error) {
-            console.error("Error getting public URL:", error.message);
-            return { publicUrl: null };  // Return null if the URL can't be fetched
+            return { publicUrl: null };
         }
-    
-        // Return the public URL of the uploaded image
         return data;
     }
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
-        console.log(file);
         toast({
             title: "File uploaded",
             description: `${event.target.files[0].name} has been selected.`,
