@@ -25,15 +25,22 @@ const Add = () => {
     const toast = useToast();
 
     useEffect(() => {
-        if (!sessionStorage.getItem("auth")) {
-            router.push("/password");
-            toast({
-                title: "403 Forbidden",
-                status: "error",
-                duration: 3000,
-                isClosable: true,
-            });
-        }
+        const checkSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session?.user) {
+                toast({
+                    title: "403 Forbidden",
+                    description: "You must be logged in.",
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+                router.push("/login");
+            }
+        };
+
+        checkSession();
     }, []);
 
     const [name, setName] = useState("");
@@ -69,7 +76,7 @@ const Add = () => {
                 family: family,
                 nativity: nativity,
                 type: type,
-                imageUrl: url,
+                image_url: url,
             },
         ]);
 
@@ -108,21 +115,53 @@ const Add = () => {
         }
     };
 
+    // async function uploadImage(file) {
+    //     const fileName = `${Date.now()}_${file.name}`;
+    //     const { data, error } = await supabase.storage
+    //         .from("images")
+    //         .upload(fileName, file);
+
+    //     if (error) {
+    //         console.error("Error uploading image:", error);
+    //         return null;
+    //     }
+    //     console.log(data)
+    //     return data.path;
+    // }
+
     async function uploadImage(file) {
         const fileName = `${Date.now()}_${file.name}`;
-        const { data, error } = await supabase.storage
-            .from("images")
-            .upload(fileName, file);
-
-        if (error) {
-            console.error("Error uploading image:", error);
+        console.log("Uploading file:", fileName);
+    
+        try {
+            // Attempt to upload the image
+            const { data, error } = await supabase.storage
+                .from("images")
+                .upload(fileName, file);
+    
+            if (error) {
+                console.error("Error uploading image:", error.message);
+                return null;
+            }
+    
+            console.log("File uploaded successfully:", data);
+            return data.path; // Return the file path
+        } catch (err) {
+            console.error("Unexpected error during file upload:", err.message);
             return null;
         }
-        return data.path;
     }
+    
 
     async function getPublicUrl(filepath) {
-        const { data } = supabase.storage.from("images").getPublicUrl(filepath);
+        const { data, error } = supabase.storage.from("images").getPublicUrl(filepath);
+    
+        if (error) {
+            console.error("Error getting public URL:", error.message);
+            return { publicUrl: null };  // Return null if the URL can't be fetched
+        }
+    
+        // Return the public URL of the uploaded image
         return data;
     }
 

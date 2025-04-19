@@ -29,16 +29,23 @@ export const GridItem = ({
     return (
         <>
             <Box w="100%" textAlign="center">
-                <Box cursor="pointer" onClick={handleOpen}>
+                <Box
+                    position="relative"
+                    width="100%"
+                    height="200px"
+                    overflow="hidden"
+                    borderRadius="12px"
+                    onClick={handleOpen}
+                    cursor="pointer"
+                >
                     <Image
                         loader={({ src }) => (src ? src : blankThumbnail)}
                         src={thumbnail}
                         alt={name}
-                        width="400"
-                        height="225"
-                        className="grid-item-thumbnail"
+                        fill
                         loading="lazy"
-                        style={{ objectFit: 'cover' }}
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        style={{ objectFit: "cover" }}
                     />
                 </Box>
                 <Text mt={2} fontWeight="bold">
@@ -81,7 +88,7 @@ export const GridItem = ({
                             width="800"
                             height="450"
                             loading="lazy"
-                            style={{ objectFit: 'cover' }}
+                            style={{ objectFit: "cover" }}
                         />
                     </ModalBody>
                 </ModalContent>

@@ -7,6 +7,7 @@ import {
     Link,
     Stack,
     Heading,
+    Button,
     Flex,
     Menu,
     MenuItem,
@@ -17,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import ThemeToggleButton from "./theme-toggle-button";
+import { supabase } from "../supabaseClient";
 
 const LinkItem = ({ href, path, target, children, ...props }) => {
     const active = path === href;
@@ -46,7 +48,25 @@ const Navbar = (props) => {
     const [auth, setAuth] = useState(false);
 
     useEffect(() => {
-        setAuth(sessionStorage.getItem("auth") === "true");
+        const getSession = async () => {
+            const {
+                data: { session },
+            } = await supabase.auth.getSession();
+            setAuth(!!session?.user);
+        };
+
+        getSession();
+
+        // Listen to login/logout events too
+        const { data: listener } = supabase.auth.onAuthStateChange(
+            (_event, session) => {
+                setAuth(!!session?.user);
+            }
+        );
+
+        return () => {
+            listener?.subscription.unsubscribe();
+        };
     }, []);
 
     return (
@@ -84,17 +104,22 @@ const Navbar = (props) => {
                     <LinkItem href="/browse" path={path}>
                         Browse
                     </LinkItem>
-                    <LinkItem
-                        href={auth ? "/add" : "/password"}
-                        path={path}
-                    >
+                    <LinkItem href={auth ? "/add" : "/login"} path={path}>
                         Add Discovery
                     </LinkItem>
                 </Stack>
 
                 <Box flex={1} align="right">
                     <ThemeToggleButton />
-
+                    {auth && (
+                        <Button
+                            size="sm"
+                            ml={4}
+                            onClick={() => supabase.auth.signOut()}
+                        >
+                            Log out
+                        </Button>
+                    )}
                     <Box ml={2} display={{ base: "inline-block", md: "none" }}>
                         <Menu isLazy id="navbar-menu">
                             <MenuButton

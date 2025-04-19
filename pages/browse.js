@@ -95,7 +95,7 @@ const Browse = () => {
                         <Section>
                             <GridItem
                                 key={animal.name}
-                                thumbnail={animal.imageUrl ? animal.imageUrl : thumbnail}
+                                thumbnail={animal.image_url ? animal.image_url : thumbnail}
                                 name={animal.name}
                                 species={animal.species}
                                 family={animal.family}
